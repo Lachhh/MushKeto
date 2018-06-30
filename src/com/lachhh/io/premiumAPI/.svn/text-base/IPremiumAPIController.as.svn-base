@@ -1,0 +1,42 @@
+package com.lachhhEngine.io.externalAPI.premiumAPI {
+	import com.lachhhEngine.io.Callback;
+	import com.lachhhEngine.io.externalAPI.IExternalAPI;
+	import com.lachhhEngine.initializers.Initializer;
+
+	/**
+	 * @author Lachhh
+	 */
+	public interface IPremiumAPIController extends IExternalAPI{
+		function ShowBar(o:Object = null):void ;
+		function ShowLogin(o:Object = null):void ;
+		function ShowItem(m:MetaExternalPremiumItem):void ;
+		function ShowStore(o:Object = null):void ;
+		function HideBar():void ;
+		function FlashBar():void ;				
+		function InUse():Boolean ;		
+		function HasItem(m:MetaExternalPremiumItem):Boolean ;
+		function IsLastItemPurchased(m:MetaExternalPremiumItem):Boolean ;
+		function set onPurchaseCallback(c:Callback):void ;
+		function set onLogInCallback(c:Callback):void ;
+		
+		
+		function GetItemNumBought(m:MetaExternalPremiumItem):int ;
+		function GetItemCostGold(m:MetaExternalPremiumItem):int ;
+		function GetItemCostPoint(m:MetaExternalPremiumItem):int ;
+		function ConsumeItem(m:MetaExternalPremiumItem, numToConsume:int, callback:Callback):void ;
+		function get goldCurrencyName():String ;
+		function get pointCurrencyName():String ;
+		function get goldAcronym():String ;
+		function get pointAcronym():String ;
+		function get accountName():String ;
+		function get myGold():int ;
+		function get myPoint():int ;
+		function get serverStartingTime():Date ;
+		function GetServerTime():Date ;
+		
+		function get canShowMyMoney():Boolean ;
+		function get mustShowPurchasePopup():Boolean ;
+		
+		
+	}
+}

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker https://www.codeandweb.com/texturepacker -->
+<!-- $TexturePacker:SmartUpdate:fa9cb6c53b52c66753c1e1e6edf2b4d7:be959ba256a956d93ba90441ab7c4bd3:3450e11da3dd98069a5ef2c1bb16210f$ -->
+<TextureAtlas imagePath="JSB_UI_TitleAndPreloader.png" width="4096" height="2048">
+    <SubTexture name="JSB_UI_TITLEANDPRELOADER_TEXTURE_0" x="694" y="1717" width="384" height="151"/>
+    <SubTexture name="JSB_UI_TITLEANDPRELOADER_TEXTURE_1" x="694" y="1540" width="413" height="175"/>
+    <SubTexture name="JSB_UI_TITLEANDPRELOADER_TEXTURE_2" x="1109" y="1540" width="384" height="85"/>
+    <SubTexture name="JSB_UI_TITLEANDPRELOADER_TEXTURE_3" x="1080" y="1717" width="409" height="106"/>
+    <SubTexture name="JSB_UI_TITLEANDPRELOADER_TEXTURE_4" x="1109" y="1627" width="384" height="85"/>
+    <SubTexture name="JSB_UI_TITLEANDPRELOADER_TEXTURE_5" x="120" y="1992" width="32" height="32"/>
+    <SubTexture name="JSB_UI_TITLEANDPRELOADER_TEXTURE_6" x="2" y="1992" width="54" height="54"/>
+    <SubTexture name="JSB_UI_TITLEANDPRELOADER_TEXTURE_7" x="831" y="1978" width="64" height="67"/>
+    <SubTexture name="JSB_UI_TITLEANDPRELOADER_TEXTURE_8" x="58" y="2034" width="3" height="3" frameX="0" frameY="0" frameWidth="1" frameHeight="1"/>
+    <SubTexture name="JSB_UI_TITLEANDPRELOADER_TEXTURE_9" x="2" y="2" width="2048" height="1536"/>
+    <SubTexture name="JSB_UI_TITLEANDPRELOADER_TEXTURE_10" x="831" y="1870" width="729" height="106"/>
+    <SubTexture name="JSB_UI_TITLEANDPRELOADER_TEXTURE_11" x="2052" y="2" width="1013" height="1012" frameX="0" frameY="-13" frameWidth="1013" frameHeight="1025"/>
+    <SubTexture name="JSB_UI_TITLEANDPRELOADER_TEXTURE_12" x="58" y="1992" width="60" height="40"/>
+    <SubTexture name="JSB_UI_TITLEANDPRELOADER_TEXTURE_13" x="3067" y="2" width="1013" height="987"/>
+    <SubTexture name="JSB_UI_TITLEANDPRELOADER_TEXTURE_14" x="2" y="1540" width="690" height="450" frameX="0" frameY="-77" frameWidth="690" frameHeight="538"/>
+    <SubTexture name="JSB_UI_TITLEANDPRELOADER_TEXTURE_15" x="1491" y="1714" width="350" height="79"/>
+    <SubTexture name="JSB_UI_TITLEANDPRELOADER_TEXTURE_16" x="694" y="1870" width="135" height="124"/>
+</TextureAtlas>

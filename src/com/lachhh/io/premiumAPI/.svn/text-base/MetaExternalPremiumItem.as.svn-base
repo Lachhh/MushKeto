@@ -1,0 +1,59 @@
+package com.lachhhEngine.io.externalAPI.premiumAPI {
+	import com.lachhhEngine.io.externalAPI.GatchaController;
+	import com.lachhhEngine.io.externalAPI.ExternalAPIManager;
+
+	/**
+	 * @author Lachhh
+	 */
+	public class MetaExternalPremiumItem {
+		private var _idGS:int;
+		private var _idMochiCoin:String;
+		private var _idMTV:String;
+		private var _idGatcha:String;
+		private var _idKong:String;
+		
+		private var _gatchaCost:int;  // Since this data is stored locally, we need to put the cost in there.
+		private var _gatchaReason:String;  // Since this data is stored locally, we need to put the cost in there.
+		
+		private var _idPayVault:String;
+		private var _idPayVaultValue:int;  
+		
+		function MetaExternalPremiumItem(idGS:int = -1, idMochiCoin:String = "", idMTV:String = "", idGatcha:String = "", idKong:String = "", gatchaCost:int = 0, gatchaReason:String = "", idPayVault:String = "", idPayVaultValue:int = 0) {
+			_idGS = idGS;
+			_idMochiCoin = idMochiCoin;
+			_idMTV = idMTV ;
+			_idGatcha = idGatcha;
+			_idKong = idKong;
+			_gatchaCost = gatchaCost;
+			_gatchaReason = gatchaReason;
+			_idPayVault = idPayVault;
+			_idPayVaultValue = idPayVaultValue;
+			if(ExternalAPIManager.premiumAPI is GatchaController) {
+				var g:GatchaController = ExternalAPIManager.premiumAPI as GatchaController;
+				g.LoadNumItemBought(this); 	
+			}
+		}
+
+		public function get idGS():int {return _idGS;}
+		public function get idMochiCoin():String {return _idMochiCoin;}
+		public function get idMTV():String {return _idMTV;}
+		public function get idGatcha():String {return _idGatcha;}
+		public function get idKong():String {return _idKong;}
+		
+		public function get gatchaCost():int {
+			return _gatchaCost;
+		}
+		
+		public function get gatchaReason():String {
+			return _gatchaReason;
+		}
+		
+		public function get idPayVault():String {
+			return _idPayVault;
+		}
+		
+		public function get idPayVaultValue():int {
+			return _idPayVaultValue;
+		}
+	}
+}

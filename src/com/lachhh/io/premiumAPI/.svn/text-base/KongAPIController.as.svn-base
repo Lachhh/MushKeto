@@ -1,0 +1,301 @@
+package com.lachhhEngine.io.externalAPI.premiumAPI {
+	import com.lachhhEngine.initializers.VersionInfo;
+	import com.lachhhEngine.io.Callback;
+	import com.lachhhEngine.io.LoadingShower;
+	import com.lachhhEngine.io.SiteLocking;
+	import com.lachhhEngine.io.externalAPI.statsAPI.IStatsAPI;
+	import com.lachhhEngine.io.externalAPI.statsAPI.MetaStatData;
+
+	import flash.display.Loader;
+	import flash.display.LoaderInfo;
+	import flash.display.MovieClip;
+	import flash.events.Event;
+	import flash.net.URLRequest;
+	import flash.system.Security;
+
+	/**
+	 * @author Lachhh
+	 */
+	public class KongAPIController implements IPremiumAPIController, IStatsAPI {
+		private var _kongregate:* ;
+		private var _connected:Boolean ;
+		private var _connecting:Boolean ;
+		
+		private var _logInCallback:Callback;
+		private var _onPurchaseCallback:Callback;
+		
+		private var _inventory:Array;
+		private var _isOnKong:Boolean;
+		
+		private var _loading:LoadingShower;
+		private var _root:MovieClip;
+		
+		private var _lastPremiumItemBought:MetaExternalPremiumItem;
+		private var _premiumItemPending:MetaExternalPremiumItem;
+		
+		static private var _instance:KongAPIController ;
+		
+		
+		
+
+		public function KongAPIController() {
+			_connected = false;
+			_connecting = false;
+			_inventory = new Array();
+			if(!_instance) {
+				_instance = this;
+			} else {
+				throw new Error("KongAPICreatedTwice"); 	
+			}
+			_premiumItemPending = null;
+			_lastPremiumItemBought = null;
+		}
+
+		
+		public function Connect(root:MovieClip, success:Callback = null, error:Callback = null):void {
+			if(_connected || _connecting) return ;
+			_connecting = true;
+			_root = root;
+			_loading = new LoadingShower();
+			
+			_isOnKong = SiteLocking.IsInSite(root, VersionInfo.URL_SITELOCK_KONG);
+			if(!_isOnKong) return ;
+			
+			// Pull the API path from the FlashVars
+			var paramObj:Object = LoaderInfo(root.loaderInfo).parameters;
+			 
+			// The API path. The "shadow" API will load if testing locally.
+			var apiPath:String = paramObj.kongregate_api_path ||
+			  "http://www.kongregate.com/flash/API_AS3_Local.swf";
+			 
+			// Allow the API access to this SWF
+			Security.allowDomain(apiPath);
+			 
+			// Load the API
+			var request:URLRequest = new URLRequest(apiPath);
+			var loader:Loader = new Loader();
+			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, loadComplete);
+			loader.load(request);
+			root.addChild(loader);			
+		}
+		
+		// This function is called when loading is complete
+		private function loadComplete(event:Event):void
+		{
+		    // Save Kongregate API reference
+		    _kongregate = event.target.content;
+		 
+		    // Connect to the back-end
+		    _kongregate.services.connect();
+		 	_connected = true;
+		 	
+		 	if(loggedIn) {
+		 		kongregate.mtx.requestUserItemList(null, onUserItems);
+		 		kongregate.services.addEventListener("login", onKongregateInPageLogin);
+		 	}
+		    // You can now access the API via:
+		    // kongregate.services
+		    // kongregate.user
+		    // kongregate.scores
+		    // kongregate.stats
+		    // etc...
+		}
+		
+		private function onKongregateInPageLogin(event:Event):void{
+			 
+			kongregate.mtx.requestUserItemList(null, onUserItems);
+		  // Get the user's new login credentials
+		  //var user_id:Number = kongregate.services.getUserId();
+		  //var username:String = kongregate.services.getUsername();
+		 // var token:String = kongregate.services.getGameAuthToken();
+		     
+		  // Log in with new credentials here
+		}
+				 		
+		private function onUserItems(result:Object):void{
+		  trace("User item list received, success: " + result.success);
+		  if(result.success){
+		  	var str:String = "";
+		    for( var i:int = 0; i < result.data.length; i++ ){
+		      var item:Object = result.data[i];
+		      str += (i+1) + ". " + item.identifier + ", " + item.id + "," + item.data;
+		      //trace((i+1) + ". " + item.identifier + ", " + item.id + "," + item.data);
+		      _inventory.push(item);
+		    }
+		    if(_logInCallback != null) _logInCallback.DoCallback();
+		  }
+		}
+		
+		
+		
+		public function ShowBar(o:Object = null):void {}
+		public function ShowLogin(o:Object = null):void {
+			if(!connected) return ;
+			kongregate.services.showSignInBox();
+		}
+		
+		public function ShowItem(m:MetaExternalPremiumItem):void {
+			if(!loggedIn) {
+				ShowLogin();
+				return ;
+			} else {
+				PurchaseItem(m);
+			}
+		}
+		public function ShowStore(o:Object = null):void {
+			if(!loggedIn) {
+				ShowLogin();
+				return ;
+			} else {
+				
+			}
+		}
+		
+		private function PurchaseItem(m:MetaExternalPremiumItem):void {
+			if(!connected) return ;
+			//if(_premiumItemPending != null) return ; 
+			_premiumItemPending = m;
+			kongregate.mtx.purchaseItems([m.idKong], onPurchaseResult );
+			_loading.Show(_root);
+		}
+		
+		private function onPurchaseResult(result:Object):void{
+			
+			if(result.success) {
+				_lastPremiumItemBought = _premiumItemPending;
+				kongregate.mtx.requestUserItemList(null, onUpdateItems);
+				if(_onPurchaseCallback != null) _onPurchaseCallback.DoCallback();
+				_loading.Hide();
+			} else {
+				_loading.Hide();
+			}
+			_premiumItemPending = null;
+		}
+		
+		private function onUpdateItems(result:Object):void{
+		  trace("User item list received, success: " + result.success);
+		  if(result.success){
+		  	
+			_inventory = [];
+		  	var str:String = "";
+		    for( var i:int = 0; i < result.data.length; i++ ){
+		      var item:Object = result.data[i];
+		      trace((i+1) + ". " + item.identifier + ", " + item.id + "," + item.data);
+		      _inventory.push(item);
+		      str += (i+1) + ". " + item.identifier + ", " + item.id + "," + item.data;
+		    }
+		    
+		  }
+		 // _loading.Hide();
+		}
+		
+		public function HideBar():void {}
+		public function FlashBar():void {}
+		public function InUse():Boolean {return false;}
+		
+		public function HasItem(m:MetaExternalPremiumItem):Boolean {
+			return GetItemNumBought(m) > 0;
+		}
+		
+		public function GetItemNumBought(m:MetaExternalPremiumItem):int {
+			var cpt:int = 0;
+			for (var i : int = 0; i < _inventory.length; i++) {
+				var item:Object = _inventory[i];
+				if(m.idKong.toLocaleLowerCase() == item.identifier.toLocaleLowerCase()) cpt++;
+			}
+			return cpt;
+		}
+		
+		public function GetItemCostGold(m:MetaExternalPremiumItem):int {
+			// TODO: Auto-generated method stub
+			return 0;
+		}
+		
+		public function GetItemCostPoint(m:MetaExternalPremiumItem):int {
+			// TODO: Auto-generated method stub
+			return 0;
+		}
+		
+		public function get goldCurrencyName():String { return "Kreds";	}
+		public function get pointCurrencyName():String { return "Kreds";}
+		public function get goldAcronym():String {return "Kreds";}
+		public function get pointAcronym():String {return "Kreds";}
+		
+		public function get accountName():String {
+			if(!connected) return "";
+			return kongregate.services.getUsername();
+		}
+		
+		public function get myGold():int {
+			// TODO: Auto-generated method stub
+			return 0;
+		}
+		
+		public function get myPoint():int {	return 0;}
+		
+		public function set onPurchaseCallback(c:Callback):void {_onPurchaseCallback = c;}
+		public function set onLogInCallback(c:Callback):void {_logInCallback = c;}
+		
+		public function get connected():Boolean {
+			return _connected;
+		}
+		
+		public function get loggedIn():Boolean {
+			if(!connected) return false;
+			return !kongregate.services.isGuest();
+		}
+		
+		public function get nameOfSystem():String {
+			return "Kongregate";
+		}
+		
+		public function get kongregate():* {
+			return _kongregate;
+		}
+		
+		public function get canShowMyMoney():Boolean { return false;}
+		
+		
+		public function SubmitData(kongData:MetaStatData):void {
+			if(!_isOnKong || _kongregate == null || _kongregate.stats == null) return ; 
+			_kongregate.stats.submit(kongData.name, kongData.value);
+		}
+		 
+		public function SubmitDataArray(kongDatas:Array):void {
+			if(!_isOnKong || _kongregate == null || _kongregate.stats == null) return ; 
+			var kongMetaData:MetaStatData ;
+			for (var i:int = 0 ; i < kongDatas.length ; i++) {
+				kongMetaData = MetaStatData(kongDatas[i]);
+				SubmitData(kongMetaData);
+			}	 
+		}
+		
+		public function get mustShowPurchasePopup():Boolean { return false;
+		}
+		
+		public function SendStat(m:MetaStatData):void {
+			SubmitData(m);
+		}
+		public function ConsumeItem(m:MetaExternalPremiumItem, numToConsume:int, callback:Callback):void {
+			throw new Error("to be coded");
+		}
+		
+		public function IsLastItemPurchased(m:MetaExternalPremiumItem):Boolean {
+			if(_lastPremiumItemBought == null) return false;
+			return _lastPremiumItemBought.idKong == m.idKong;
+		}
+		
+		static public function get instance():KongAPIController {
+			return _instance;
+		}
+		
+		public function GetServerTime():Date {
+			return null;
+		}
+		
+		public function get serverStartingTime():Date {
+			return null;
+		}
+		
+	}
+}

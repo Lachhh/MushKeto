@@ -1,0 +1,17 @@
+C:\tools\FlexSDK4_9_1\bin\adt.bat
+-package
+-target
+apk
+-storetype
+pkcs12
+-keystore
+docs/certs/debug.p12
+-storepass
+KFOcIIbyXcQdmx2bZQM3/g==
+D:/workspace/MushKeto/platforms/MushKeto_Android/release/MushKeto_Android.apk
+bin/MushKeto_Android-app.xml
+-C
+bin
+MushKeto_Android.swf
+	
+false

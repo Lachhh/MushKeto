@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
+<!-- $TexturePacker:SmartUpdate:e16d02afe3db46578d0abbd1ac6579a2:60b64904555436f3e6c7b0f2266dedd4:6540858c6971778b4d01c968723d5010$ -->
+<TextureAtlas imagePath="fontNoto.png" width="1024" height="1024">
+    <SubTexture name="noto_0" x="0" y="0" width="1023" height="858" frameX="0" frameY="0" frameWidth="1024" frameHeight="1024"/>
+</TextureAtlas>

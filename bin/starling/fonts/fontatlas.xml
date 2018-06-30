@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
+<!-- $TexturePacker:SmartUpdate:e9ff58b755a03abc4b221fd022e1b83c:226b3a5f6fbc9910a6fd0e685f4fe894:3c6e07f9c4ab5f1f8eab95f9faa8c03c$ -->
+<TextureAtlas imagePath="fontatlas.png" width="512" height="1024">
+    <SubTexture name="cooper_0" x="0" y="0" width="511" height="428" frameX="0" frameY="0" frameWidth="512" frameHeight="512"/>
+    <SubTexture name="gothambold_0" x="0" y="623" width="511" height="173" frameX="0" frameY="0" frameWidth="512" frameHeight="512"/>
+    <SubTexture name="sf ironsides extended_0" x="0" y="798" width="510" height="142" frameX="0" frameY="0" frameWidth="512" frameHeight="512"/>
+    <SubTexture name="vinque_0" x="0" y="430" width="511" height="191" frameX="0" frameY="0" frameWidth="512" frameHeight="512"/>
+</TextureAtlas>

@@ -1,0 +1,430 @@
+package com.lachhhEngine.io.externalAPI.premiumAPI {
+	import com.mtvn.services.core.commands.util.GetParameter;
+	import com.lachhhEngine.io.Callback;
+	import com.lachhhEngine.io.LoadingShower;
+	import com.lachhhEngine.io.externalAPI.ExternalAPIManager;
+	import com.lachhhEngine.io.externalAPI.savefileAPI.ISaveFileAPI;
+	import com.lachhhEngine.io.files.FileManager;
+	import com.mtvn.services.core.ServiceClient;
+	import com.mtvn.services.core.commands.ServiceCall;
+	import com.mtvn.services.core.commands.persistence.LoadText;
+	import com.mtvn.services.core.commands.persistence.SaveText;
+	import com.mtvn.services.core.commands.social.ShareGameEvent;
+	import com.mtvn.services.core.commands.virtualgoods.GetGameItems;
+	import com.mtvn.services.core.commands.virtualgoods.GetPlayerInfo;
+	import com.mtvn.services.core.commands.virtualgoods.PurchaseItem;
+	import com.mtvn.services.core.commands.virtualgoods.ShowCurrencyStorefront;
+	import com.mtvn.services.core.data.objects.Currency;
+	import com.mtvn.services.core.data.objects.Item;
+	import com.mtvn.services.core.data.objects.PricedItem;
+	import com.mtvn.services.core.data.user.PlayerInfoData;
+	import com.mtvn.services.core.errors.ServiceErrorCodes;
+	import com.mtvn.services.core.events.ServiceEvent;
+
+	import flash.display.MovieClip;
+
+	/**
+	 * @author Lachhh
+	 */
+	public class MTVVirtualGoodsController implements IPremiumAPIController, ISaveFileAPI {
+		static private const TEXT_DATA_KEY:String = "GAME";
+		private var _root:MovieClip;
+		private var _connectSuccess:Callback;
+		private var _connectError:Callback;
+		private var _saveSuccess:Callback;
+		private var _loadSuccess:Callback;
+		private var _loadError:Callback;
+		private var _loadedSaveGame:String ;
+		private var _saveGameLoaded:Boolean ;
+		private var _onDataLoaded:Callback ;
+		private var _serviceClient:ServiceClient ;
+		private var _playerInfo:PlayerInfoData;
+		private var _gameItems:Array;
+		private var _purchaseCallback:Callback;
+		private var _loginCallback:Callback;
+		private var _showStoreCallback:Callback;
+		
+		private var _idGame:String ;
+		private var _gameKeyword:String ;
+		private var _debugMode:Boolean;
+		private var _loggedIn:Boolean = false;
+		private var _connected:Boolean = false;
+		private var _loadingShower:LoadingShower ;
+		
+		private var _getParameterCallback:Callback ;
+
+		public function MTVVirtualGoodsController(idGame:String, gameKeyWord:String, debug:Boolean) {
+			_idGame = idGame;
+			_gameKeyword = gameKeyWord;
+			_debugMode = debug;
+		}
+
+		public function Connect(root:MovieClip, success:Callback = null, error:Callback = null):void {
+			_root = root;
+			_connectSuccess = success;
+			_connectError = error;
+			GetGameInfo();
+			GetPlayerInformation();
+			_loadingShower = new LoadingShower();
+		}
+
+		private function CreateClient():ServiceClient {
+			if(_serviceClient == null) {
+				var configUrl:String ;
+				if(_debugMode) {
+					configUrl = "http://dev.addictinggames.com/servicemanager/servicemanager.swf?gameKeyword=" + _gameKeyword + "&gameID=" + _idGame + "&devMode=true&devUser=BerzerkSimon&configURL=http://dev.addictinggames.com/servicemanager/config/?c";
+				} else {
+					configUrl = "http://dev.addictinggames.com/servicemanager/servicemanager.swf?gameKeyword=" + _gameKeyword + "&gameID=" + _idGame + "&devUser=BerzerkSimon";
+				}				 
+				_serviceClient = new ServiceClient(configUrl);	
+			}
+			return _serviceClient; 	
+		}
+		
+		public function get connected():Boolean {return _connected;}
+		public function get loggedIn():Boolean { return _loggedIn;}
+
+		private function GetGameInfo():void {
+			var serviceCall:ServiceCall = new GetGameItems();
+			var serviceClient:ServiceClient = CreateClient();
+			serviceCall.addEventListener( ServiceEvent.COMPLETE, getGameItemsComplete );
+			serviceClient.post( serviceCall );
+		}
+		
+		private function getGameItemsComplete(serviceEvent:ServiceEvent):void {
+			if ( serviceEvent.success ) { // request for player info was successful ...
+				if ( serviceEvent.data != null && serviceEvent.data.object != null) {
+					_gameItems = serviceEvent.data.object as Array;
+					_connected = true;
+				}
+			}
+		}
+		
+		private function GetPlayerInformation():void {
+			var serviceCall:ServiceCall = new GetPlayerInfo();
+			var serviceClient:ServiceClient = CreateClient();
+			serviceCall.addEventListener( ServiceEvent.COMPLETE, getPlayerInfoComplete );
+			serviceClient.post( serviceCall );
+		}
+		
+		private function getPlayerInfoComplete(serviceEvent:ServiceEvent):void {
+			if ( serviceEvent.success ) { // request for player info was successful ...
+				if ( serviceEvent.data != null && serviceEvent.data.object != null && serviceEvent.data.object is PlayerInfoData ) {
+					_playerInfo = PlayerInfoData( serviceEvent.data.object );
+					_loggedIn = true;
+					if(ExternalAPIManager.savedFileAPI == this) {
+						LoadData(_connectSuccess, _connectError);	
+					}
+					if(_loginCallback != null) _loginCallback.DoCallback();
+				}
+			}
+		}
+		
+		public function LoadData(success:Callback = null, error:Callback = null):void {
+			_loadSuccess = success;
+			_loadError = error;
+			
+			var serviceClient:ServiceClient = CreateClient();
+			var serviceCall:ServiceCall = new LoadText(TEXT_DATA_KEY); 
+			serviceCall.addEventListener( ServiceEvent.COMPLETE, loadComplete );
+			serviceClient.post( serviceCall );
+		}
+		
+		private function loadComplete( serviceEvent:ServiceEvent ):void {
+			if ( serviceEvent.success ) {
+				_loadedSaveGame = String(serviceEvent.data.object);
+				if(_loadSuccess != null) _loadSuccess.DoCallback();
+				if(_onDataLoaded != null) _onDataLoaded.DoCallback();
+				_onDataLoaded = null;
+				_saveGameLoaded = true;
+			} else {
+				if(_loadError != null) _loadError.DoCallback();
+				_loadedSaveGame = null;
+			}
+		}
+		
+		public function SaveData(s:String, onDone:Callback):void {
+			_saveSuccess = onDone;
+			var serviceClient:ServiceClient = CreateClient();
+			// specify the key and value to be saved. The key will be needed to later retrieve the saved value.
+			var serviceCall:ServiceCall = new SaveText(TEXT_DATA_KEY, s); // in this example, key is "playerStatus"
+			serviceCall.addEventListener( ServiceEvent.COMPLETE, saveComplete );
+			serviceClient.post( serviceCall);
+			_loadedSaveGame = s;
+		}
+
+		private function saveComplete( serviceEvent:ServiceEvent ):void {
+			if ( serviceEvent.success )	{
+				if(_saveSuccess != null) _saveSuccess.DoCallback();
+			}
+		}	
+			
+		public function ClearData():void {
+			SaveData(FileManager.EMPTY_FILE, null);
+		}
+		
+		public function get savedData():String {
+			return _loadedSaveGame;
+		}
+
+		public function get isEmpty():Boolean {
+			return _loadedSaveGame == null || _loadedSaveGame == "" || _loadedSaveGame == "false" || _loadedSaveGame == "null" || _loadedSaveGame == FileManager.EMPTY_FILE;
+		}
+		
+		public function get dataLoaded():Boolean {
+			return _saveGameLoaded;
+		}
+		
+		public function set onDataLoadedCallback(c:Callback):void {
+			_onDataLoaded = c;
+		}
+		
+		public function HideBar():void {}
+		public function FlashBar():void {}
+		public function InUse():Boolean {return false;}
+		public function ShowBar(o:Object = null):void {}
+		public function ShowLogin(o:Object = null):void {
+			var serviceCall:ServiceCall = new GetPlayerInfo(true);
+			var serviceClient:ServiceClient = CreateClient();
+			serviceCall.addEventListener( ServiceEvent.COMPLETE, getPlayerInfoComplete );
+			serviceClient.post( serviceCall );
+		}
+		
+		public function ShowItem(m:MetaExternalPremiumItem):void {
+			/*
+			var serviceCall:ServiceCall = new ShowItemStorefront();
+			var serviceClient:ServiceClient = CreateClient();
+			serviceCall.addEventListener( ServiceEvent.COMPLETE, showItemComplete );
+			serviceClient.post( serviceCall );
+			 * 
+			 */
+			 
+			PurchaseAnItem(m);
+		}
+		
+		private function showItemComplete( serviceEvent:ServiceEvent ):void{
+			// the ShowCurrencyStorefront dialog has been closed, the game can continue ...
+			if ( serviceEvent.success ) {
+				
+			}
+		}
+		
+		public function PurchaseAnItem(m:MetaExternalPremiumItem):void {
+			if(loggedIn) {
+				var serviceCall:ServiceCall = new PurchaseItem(m.idMTV);
+				var serviceClient:ServiceClient = CreateClient();
+				serviceCall.addEventListener( ServiceEvent.COMPLETE, purchaseItemComplete );
+				serviceClient.post( serviceCall );
+				_loadingShower.Show(_root);
+			} else {
+				ShowLogin();	
+			}
+		}
+		
+		private function purchaseItemComplete( serviceEvent:ServiceEvent ):void {
+			if ( serviceEvent.success )  {
+				if ( serviceEvent.data != null && serviceEvent.data.object != null && serviceEvent.data.object is PlayerInfoData ) {
+					_playerInfo = PlayerInfoData( serviceEvent.data.object);
+					if(_purchaseCallback != null) _purchaseCallback.DoCallback();
+				}
+			}
+			_loadingShower.Hide();
+		}
+		
+		public function ShowStore(o:Object = null):void {
+			if(!loggedIn) {
+				ShowLogin();	
+			} else {
+				var serviceCall:ServiceCall = new ShowCurrencyStorefront();
+				var serviceClient:ServiceClient = CreateClient();
+				serviceCall.addEventListener( ServiceEvent.COMPLETE, showStoreComplete );
+				serviceClient.post( serviceCall );
+			}
+		}
+		
+		private function showStoreComplete( serviceEvent:ServiceEvent ):void{
+			// the ShowCurrencyStorefront dialog has been closed, the game can continue ...
+			if ( serviceEvent.success ) {
+				if ( serviceEvent.data != null && serviceEvent.data.object != null && serviceEvent.data.object is PlayerInfoData )
+				{
+					trace( "makeServiceCall() was successful, currency purchased ..." );
+					
+					_playerInfo = PlayerInfoData( serviceEvent.data.object);
+					if(_showStoreCallback != null) _showStoreCallback.DoCallback();
+				}
+			}
+		}
+		
+		public function HasItem(m:MetaExternalPremiumItem):Boolean {
+			var v:Item = GetPlayerVirtualItemFromMeta(m);
+			if(v == null) return false;			
+			return v.quantity >= 1;
+		}
+		
+		public function GetItemNumBought(m:MetaExternalPremiumItem):int {
+			var v:Item = GetPlayerVirtualItemFromMeta(m);
+			if(v == null) return 0;
+			return v.quantity;
+		}
+		
+		public function GetItemCostGold(m:MetaExternalPremiumItem):int {
+			var v:PricedItem = GetGameVirtualItemFromMeta(m);
+			if(v == null || v.price == null) return 0;
+			return int(v.price.value);
+		}
+		
+		public function GetItemCostPoint(m:MetaExternalPremiumItem):int {
+			var v:PricedItem = GetGameVirtualItemFromMeta(m);
+			if(v == null || v.price == null) return 0;
+			return int(v.price.value);
+		}
+		
+		public function get goldCurrencyName():String {
+			return "AG Bucks";
+		}
+		
+		public function get pointCurrencyName():String {
+			return "AG Bucks";
+		}
+		
+		public function get goldAcronym():String {
+			return "AG Bucks";
+		}
+		
+		public function get pointAcronym():String {
+			return "AG Bucks";
+		}
+		
+		public function get accountName():String {
+			if(_playerInfo == null) return "";
+			if(_playerInfo.user == null) return "";
+			return _playerInfo.user.userName + "";
+		}
+
+		public function GetPlayerVirtualItemFromMeta(m:MetaExternalPremiumItem):Item {
+			if(m == null || _playerInfo == null || _playerInfo.items == null) return null ;
+			for (var i : int = 0; i < _playerInfo.items.length; i++) {
+				var v:Item = _playerInfo.items[i];
+				if(v.code.toLocaleLowerCase() == m.idMTV.toLocaleLowerCase()) return v;
+			}
+			return null;
+		}
+
+		public function GetGameVirtualItemFromMeta(m:MetaExternalPremiumItem):PricedItem {
+			if(m == null || _gameItems == null) return null;
+			for (var i : int = 0; i < _gameItems.length; i++) {
+				var v:PricedItem = _gameItems[i];
+				if(v.code.toLocaleLowerCase() == m.idMTV.toLocaleLowerCase()) return v;
+			}
+			return null;
+		}
+		
+		public function set onPurchaseCallback(c:Callback):void {
+			_purchaseCallback = c;
+			_showStoreCallback = c;			
+		}
+		
+		public function get myGold():int {
+			if(_playerInfo == null) return 0;
+			if(_playerInfo.currencies == null) return 0;
+			var v:Currency = _playerInfo.currencies[0] as Currency;
+			if(v == null) return 0;
+			return v.quantity;
+		}
+		
+		public function get myPoint():int {
+			if(_playerInfo == null) return 0;
+			return 0;
+		}
+		
+		public function get showStoreCallback():Callback {
+			return _showStoreCallback;
+		}
+		
+		public function set showStoreCallback(showStoreCallback:Callback):void {
+			_showStoreCallback = showStoreCallback;
+		}
+		
+		public function set onLogInCallback(c:Callback):void {
+			_loginCallback = c;
+		}
+		
+		public function get nameOfSystem():String {return "AddictingGames";
+		}
+
+		public function get canShowMyMoney():Boolean { return true;}
+		public function get mustShowPurchasePopup():Boolean { return true;}
+		public function ConsumeItem(m:MetaExternalPremiumItem, numToConsume:int, callback:Callback):void {
+			throw new Error("to be coded");
+		}
+		
+		public function IsLastItemPurchased(m:MetaExternalPremiumItem):Boolean {
+			throw new Error("To Code");
+			return false;
+		}
+		
+		
+		
+		
+		
+		
+		public function GetParameterFromURL(paramName:String, callback:Callback):void {
+			// send a GetParameter to retrieve query data
+			// for example: http://dev.addictinggames.com/dudesinaroom?parameterName=parameterValue
+			var serviceCall:GetParameter = new GetParameter(paramName);
+			serviceCall.addEventListener( ServiceEvent.COMPLETE, onGetParameterFromURLComplete );
+			_getParameterCallback = callback;
+			CreateClient().post( serviceCall );
+		}
+		
+		private function onGetParameterFromURLComplete( serviceEvent:ServiceEvent ):void {
+			if ( serviceEvent.success )	{
+				trace ("got query parameter " + String (serviceEvent.data.object));
+				_getParameterCallback.DoCallbackWithParams([serviceEvent.data.object]);
+			} else if ( serviceEvent.error.code == ServiceErrorCodes.PARAMETER_NOT_FOUND ) {
+				trace ("parameter not found");
+			}
+		}
+		
+
+		
+		// make the Share API call
+		public function ShareOnFacebook(eventName:String, title:String, desc:String, objArg:Object) : void {
+			// send a ShareGameEvent to the player's Facebook wall
+			var serviceCall:ShareGameEvent = new ShareGameEvent(_gameKeyword + "-" + eventName,	title, desc);
+			// optional: add parameters to the URL that will be shared
+			// These can be retrieved via the GetParameter command when the game is loaded
+			
+			serviceCall.args = objArg;
+			// optional: add listener for complete event
+			serviceCall.addEventListener( ServiceEvent.COMPLETE, onShareOnFacebookComplete);
+			// post call to ServiceClient
+			CreateClient().post( serviceCall );
+		}
+		
+		// optional: complete handler
+		private function onShareOnFacebookComplete( serviceEvent:ServiceEvent ):void {
+			if ( serviceEvent.success ) {
+				trace ("ShareGameEvent successful");
+			} else {
+				switch ( serviceEvent.error.code ) {
+					case ServiceErrorCodes.USER_CANCELED_OPERATION:
+						trace ("user canceled share");
+						break;
+					case ServiceErrorCodes.SERVER_ERROR:
+						trace ("server error");
+						break;
+				}
+			}
+		}
+		
+		public function GetServerTime():Date {
+			// TODO: Auto-generated method stub
+			return null;
+		}
+		
+		public function get serverStartingTime():Date {
+			return null;
+		}
+	}
+}

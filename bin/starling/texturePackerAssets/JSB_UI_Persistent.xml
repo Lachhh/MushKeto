@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker https://www.codeandweb.com/texturepacker -->
+<!-- $TexturePacker:SmartUpdate:ce0d5f082607f310f9111621bc8c000e:6c87e686f4b08f417d90dde622a935dd:30a1a254fb789f0ab837419a03c0716f$ -->
+<TextureAtlas imagePath="JSB_UI_Persistent.png" width="512" height="1024">
+    <SubTexture name="JSB_UI_PERSISTENT_TEXTURE_0" x="389" y="300" width="113" height="37"/>
+    <SubTexture name="JSB_UI_PERSISTENT_TEXTURE_1" x="351" y="377" width="123" height="46"/>
+    <SubTexture name="JSB_UI_PERSISTENT_TEXTURE_2" x="351" y="473" width="113" height="37"/>
+    <SubTexture name="JSB_UI_PERSISTENT_TEXTURE_3" x="2" y="302" width="348" height="4"/>
+    <SubTexture name="JSB_UI_PERSISTENT_TEXTURE_4" x="477" y="130" width="14" height="22"/>
+    <SubTexture name="JSB_UI_PERSISTENT_TEXTURE_5" x="492" y="191" width="7" height="7"/>
+    <SubTexture name="JSB_UI_PERSISTENT_TEXTURE_6" x="501" y="196" width="7" height="7"/>
+    <SubTexture name="JSB_UI_PERSISTENT_TEXTURE_7" x="493" y="86" width="4" height="4"/>
+    <SubTexture name="JSB_UI_PERSISTENT_TEXTURE_8" x="477" y="176" width="25" height="13"/>
+    <SubTexture name="JSB_UI_PERSISTENT_TEXTURE_9" x="429" y="178" width="46" height="31"/>
+    <SubTexture name="JSB_UI_PERSISTENT_TEXTURE_10" x="429" y="2" width="78" height="79"/>
+    <SubTexture name="JSB_UI_PERSISTENT_TEXTURE_11" x="2" y="308" width="347" height="209" frameX="0" frameY="-24" frameWidth="347" frameHeight="233"/>
+    <SubTexture name="JSB_UI_PERSISTENT_TEXTURE_12" x="504" y="137" width="5" height="5"/>
+    <SubTexture name="JSB_UI_PERSISTENT_TEXTURE_13" x="390" y="256" width="119" height="42"/>
+    <SubTexture name="JSB_UI_PERSISTENT_TEXTURE_14" x="351" y="425" width="123" height="46"/>
+    <SubTexture name="JSB_UI_PERSISTENT_TEXTURE_15" x="240" y="676" width="162" height="22"/>
+    <SubTexture name="JSB_UI_PERSISTENT_TEXTURE_16" x="2" y="519" width="236" height="236"/>
+    <SubTexture name="JSB_UI_PERSISTENT_TEXTURE_17" x="477" y="154" width="30" height="20"/>
+    <SubTexture name="JSB_UI_PERSISTENT_TEXTURE_18" x="2" y="2" width="425" height="244"/>
+    <SubTexture name="JSB_UI_PERSISTENT_TEXTURE_19" x="351" y="339" width="155" height="36"/>
+    <SubTexture name="JSB_UI_PERSISTENT_TEXTURE_20" x="351" y="339" width="155" height="36"/>
+    <SubTexture name="JSB_UI_PERSISTENT_TEXTURE_21" x="499" y="83" width="10" height="10"/>
+    <SubTexture name="JSB_UI_PERSISTENT_TEXTURE_22" x="493" y="137" width="9" height="15"/>
+    <SubTexture name="JSB_UI_PERSISTENT_TEXTURE_23" x="240" y="532" width="206" height="42"/>
+    <SubTexture name="JSB_UI_PERSISTENT_TEXTURE_24" x="429" y="211" width="42" height="43" frameX="-5" frameY="-3" frameWidth="47" frameHeight="46"/>
+    <SubTexture name="JSB_UI_PERSISTENT_TEXTURE_25" x="2" y="271" width="385" height="29"/>
+    <SubTexture name="JSB_UI_PERSISTENT_TEXTURE_26" x="429" y="83" width="68" height="1"/>
+    <SubTexture name="JSB_UI_PERSISTENT_TEXTURE_27" x="493" y="95" width="17" height="40"/>
+    <SubTexture name="JSB_UI_PERSISTENT_TEXTURE_28" x="429" y="130" width="46" height="46"/>
+    <SubTexture name="JSB_UI_PERSISTENT_TEXTURE_29" x="240" y="631" width="192" height="43"/>
+    <SubTexture name="JSB_UI_PERSISTENT_TEXTURE_30" x="240" y="576" width="205" height="53"/>
+    <SubTexture name="JSB_UI_PERSISTENT_TEXTURE_31" x="504" y="137" width="5" height="5"/>
+    <SubTexture name="JSB_UI_PERSISTENT_TEXTURE_32" x="504" y="176" width="5" height="18"/>
+    <SubTexture name="JSB_UI_PERSISTENT_TEXTURE_33" x="351" y="512" width="97" height="18"/>
+    <SubTexture name="JSB_UI_PERSISTENT_TEXTURE_34" x="477" y="191" width="13" height="22"/>
+    <SubTexture name="JSB_UI_PERSISTENT_TEXTURE_35" x="466" y="473" width="40" height="40"/>
+    <SubTexture name="JSB_UI_PERSISTENT_TEXTURE_36" x="2" y="248" width="386" height="21"/>
+    <SubTexture name="JSB_UI_PERSISTENT_TEXTURE_37" x="429" y="86" width="62" height="42"/>
+</TextureAtlas>
