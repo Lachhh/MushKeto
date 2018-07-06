@@ -1,4 +1,6 @@
 package com.berzerkrpg {
+	import flash.ui.Keyboard;
+	import com.lachhh.io.KeyManager;
 	import com.berzerkrpg.meta.MetaGameProgress;
 	import com.berzerkrpg.meta.MetaRecipe;
 	import com.berzerkrpg.components.StarlingTextInputComponent;
@@ -34,10 +36,10 @@ package com.berzerkrpg {
 
 		private function addToEditRecipe() : void {
 			destroy();
-			var result:MetaRecipe = MetaRecipe.DEBUG_createDummy();
+			var result:MetaRecipe = new MetaRecipe();
 			result.name = textInputUser.getText();
 			MetaGameProgress.instance.metaRecipeGroup.add(result);
-			
+			MetaGameProgress.instance.saveToLocal();
 			new UI_RecipeEdit(result);
 		}
 
@@ -49,11 +51,18 @@ package com.berzerkrpg {
 			destroy();
 			new UI_MainMenu();
 		}
-		
-		
-		
-		
-		public function get panel() : MovieClip {	return visual.getChildByName("panel")  as MovieClip;	}
+
+		override public function update() : void {
+			super.update();
+			if(!isListeningToInput) return ;
+			if(KeyManager.IsKeyPressed(Keyboard.ENTER)) {
+				onConfirm();
+			}
+		}
+
+		public function get panel() : MovieClip {
+			return visual.getChildByName("panel")  as MovieClip;
+		}
 		public function get urlTxt() : TextField {	return panel.getChildByName("urlTxt")  as TextField;	}
 		public function get btn1() : MovieClip {	return panel.getChildByName("btn1")  as MovieClip;	}
 		public function get btn2() : MovieClip {	return panel.getChildByName("btn2")  as MovieClip;	}

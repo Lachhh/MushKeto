@@ -16,6 +16,11 @@ package com.berzerkrpg.ui {
 			viewRecipe = new ViewRecipe(pScreen, visualMc);
 		}
 
+		override public function destroy() : void {
+			super.destroy();
+			viewRecipe.destroyAndRemoveFromActor();
+		}
+
 		override public function refresh() : void {
 			super.refresh();
 			viewRecipe.refresh();

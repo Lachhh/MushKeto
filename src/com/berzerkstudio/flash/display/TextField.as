@@ -110,7 +110,7 @@ package com.berzerkstudio.flash.display {
 			
 			hitArea.width = m.width;
 			hitArea.height = m.height;
-			
+			vAlign = VAlign.TOP;
 			switch(m.textAlign) {
 				case "l" : 
 					align = HAlign.LEFT;
@@ -228,7 +228,7 @@ package com.berzerkstudio.flash.display {
 			
 			if(autoFitText) resizeToFit(pStarlingTextField);
 			
-			pStarlingTextField.vAlign = starling.utils.VAlign.TOP;
+			pStarlingTextField.vAlign = vAlign;
 			pStarlingTextField.hAlign = align;
 			pStarlingTextField.redraw();
 			

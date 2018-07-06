@@ -18,6 +18,9 @@ package com.berzerkrpg.multilingual {
 		static public var NO:TextInstance = setEnText("no");
 		static public var OK:TextInstance = setEnText("ok");
 		
+		
+		static public var ADD_IN_BATCH_SUCCESS:TextInstance = setEnText("Batch added successfully!");
+		static public var ADD_IN_RECIPE:TextInstance = setEnText("Add [x] ingredients in '[y]' recipe?");
 		static public var QUIT_GAME:TextInstance = setEnText("Save and Quit Game?");
 		static public var ARMORGAMES_REFRESH_BROWSER:TextInstance = setEnText("Login on ArmorGames and refresh your browser!");
 		static public var YAHOO_REFRESH_BROWSER:TextInstance = setEnText("Login on Yahoo and refresh your browser!");
@@ -31,6 +34,17 @@ package com.berzerkrpg.multilingual {
 		
 		static public var EDIT:TextInstance = setEnText("Edit");
 		static public var DELETE:TextInstance = setEnText("Delete");
+		
+		static public var REPLACE_CATEGORY:TextInstance = setEnText("You are about to add [x] ingredients to [y] category and remove current ingredient from that category.\nContinue?");
+		
+		
+		static public var FOOD_CATEGORY_CARBS:TextInstance = setEnText("Carbohydrates");
+		static public var FOOD_CATEGORY_CREAM:TextInstance = setEnText("Cream");
+		static public var FOOD_CATEGORY_FAT:TextInstance = setEnText("Fat");
+		static public var FOOD_CATEGORY_MISC:TextInstance = setEnText("Misc. & IVs");
+		static public var FOOD_CATEGORY_PROTEIN:TextInstance = setEnText("Protein");
+		static public var FOOD_CATEGORY_WATER:TextInstance = setEnText("Water");
+		static public var FOOD_CATEGORY_ALL:TextInstance = setEnText("All");
 		
 		static public var AUTO_BROWSE_RECIPE:TextInstance = setAutoEnText("AUTO_BROWSE_RECIPE", "Browse Recipe");
 		static public var AUTO_ADD_RECIPE:TextInstance = setAutoEnText("AUTO_ADD_RECIPE", "Add Recipe");

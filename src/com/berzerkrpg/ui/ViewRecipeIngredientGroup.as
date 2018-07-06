@@ -87,13 +87,13 @@ package com.berzerkrpg.ui {
 			if(metaRecipe == null) return ;
 			
 			var y:int = 0;
-			for (var i : int = 0; i < metaRecipe.listIngredients.length; i++) {
-				var metaNews : MetaIngredient = metaRecipe.listIngredients[i];
+			for (var i : int = 0; i < metaRecipe.metaIngredientsGroup.listIngredients.length; i++) {
+				var metaIngredient : MetaIngredient = metaRecipe.metaIngredientsGroup.listIngredients[i];
 				var newView : ViewIngredientDynamic = new ViewIngredientDynamic(screen, contentMc);
 				
 				newView.visual.y = y;
 				y += DIST_BETWEEN_VIEW;
-				newView.metaIngredient = metaNews;
+				newView.metaIngredient = metaIngredient;
 				newView.refresh();
 				
 				addView(newView);

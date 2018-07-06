@@ -102,7 +102,7 @@ package com.berzerkrpg.ui {
 				updateMovementWhenFingerMoveEnough();
 			} else {
 				updateMovementWhenFingerUp();
-			}
+			}	
 		}
 		
 		private function updateMovementWhenFingerDown():void {
@@ -122,20 +122,16 @@ package com.berzerkrpg.ui {
 		}
 		
 		private function updateMovementWhenFingerUp():void {
-			viewScrollBar.addPrct(force.value);
+			var contentWidth:int = viewScrollBar.contentWidth-viewScrollBar.viewWidth;
+			viewScrollBar.addPrct(force.value/contentWidth);
 		}
 		
 		private function moveContent(dx:Number):void {
 			var contentWidth:int = viewScrollBar.contentWidth-viewScrollBar.viewWidth;
 			var prctDelta:Number = dx/contentWidth;
 			viewScrollBar.addPrct(-prctDelta);
-			
-			var newValue:Number = -prctDelta;
-			if(newValue < 0) {
-				force.value = Math.min(force.value*0.95, newValue);
-			} else {
-				force.value = Math.max(force.value*0.95, newValue);
-			}
+		
+			force.value = -dx;
 		}
 		
 		private function refreshTouchArea():void {

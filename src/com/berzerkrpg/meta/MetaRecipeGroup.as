@@ -11,9 +11,7 @@ package com.berzerkrpg.meta {
 		private var objData : Dictionary = new Dictionary();
 		
 		public function MetaRecipeGroup() {
-			add(MetaRecipe.DEBUG_createDummy());
-			add(MetaRecipe.DEBUG_createDummy());
-			add(MetaRecipe.DEBUG_createDummy());
+
 		}
 
 		public function add(metaRecipe : MetaRecipe) : void {
@@ -33,7 +31,7 @@ package com.berzerkrpg.meta {
 				
 		public function decode(obj:Dictionary):void {
 			if (obj == null) return ;
-			var list : Vector.<IEncode> = FlashUtils.decodeList(objData, MetaRecipe.createFromDictionnary);
+			var list : Vector.<IEncode> = FlashUtils.decodeList(obj["listRecipes"], MetaRecipe.createFromDictionnary);
 			listRecipes = Vector.<MetaRecipe>(list);
 		}
 

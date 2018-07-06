@@ -16,6 +16,11 @@ package com.berzerkrpg.ui {
 			viewIngredient = new ViewIngredient(pScreen, visualMc);
 		}
 
+		override public function destroy() : void {
+			super.destroy();
+			viewIngredient.destroyAndRemoveFromActor();
+		}
+
 		override public function refresh() : void {
 			super.refresh();
 			viewIngredient.refresh();

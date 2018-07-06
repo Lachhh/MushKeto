@@ -20,6 +20,11 @@ package com.berzerkrpg {
 
 		public function UI_RecipeEdit(metaRecipe : MetaRecipe) {
 			super(ModelFlashAnimationEnum.UI_RECIPEEDIT_ANIM);
+			if(metaRecipe == null) {
+				new UI_MainMenu();
+				destroy();
+				return ;
+			}
 			this.metaRecipe = metaRecipe;
 			
 			viewIngredientsGroup = new ViewRecipeIngredientGroup(this, ingredientsGroupMc);
@@ -44,12 +49,13 @@ package com.berzerkrpg {
 
 		override public function destroy() : void {
 			super.destroy();
+			if(metaRecipe == null) return;
 			metaRecipe.name = starlingTxt.getText();
 		}
 
 		private function onAddIngredient() : void {
 			destroy();
-			new UI_RecipeAddIngredient();
+			new UI_IngredientBrowseTemplate();
 		}
 
 		private function onX() : void {

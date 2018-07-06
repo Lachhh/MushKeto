@@ -76,13 +76,12 @@ package com.lachhh.lachhhengine {
 		}
 		
 		static public function loadLocally():Dictionary {
-			if(!VersionInfo.modelPlatform.isMobile()) return loadLocallyEncrypted();
-			if(isEmptyNotEncrypted) return loadLocallyEncrypted();
+			if(shouldEncryptFile()) return loadLocallyEncrypted();
 			return loadLocallyNotEncrypted();
 		}
 		
 		static private function shouldEncryptFile():Boolean {
-			return !VersionInfo.modelPlatform.isMobile();
+			return false;
 		}
 		
 		private static function loadLocallyEncrypted() : Dictionary {
@@ -99,7 +98,7 @@ package com.lachhh.lachhhengine {
 		}
 
 		private static function loadLocallyNotEncrypted() : Dictionary {
-			if(!VersionInfo.modelPlatform.isMobile()) return null;
+			if(shouldEncryptFile()) return null;
 			var decryptedStr:String = loadSharedObjectNotEncrypted();
 			return stringToDictionnary(decryptedStr);
 		}

@@ -1,4 +1,6 @@
 package com.berzerkrpg.components {
+	import com.animation.exported.FX_SEARCH;
+	import com.animation.exported.FX_LISTOFINGREDIENTS;
 	import com.animation.exported.FX_BERZERK_PASS;
 	import com.animation.exported.FX_BERZERK_USER;
 	import com.animation.exported.FX_CODE_INPUT;
@@ -46,6 +48,13 @@ package com.berzerkrpg.components {
 		private function onResize(event : Event) : void {
 			resizeTf();
 		}
+		public function setAsSearch() : void {
+			setAnim(new FX_SEARCH());
+			clearOnStartEdit = false;
+			maxTxtField = 24;
+			_flashTextField.text = "";
+			isSingleLine = true;
+		}
 		
 		public function setRecipeName():void {
 			setAnim(new FX_RECIPENAME());
@@ -53,6 +62,13 @@ package com.berzerkrpg.components {
 			maxTxtField = 24;
 			_flashTextField.text = "< recipe name >";
 			isSingleLine = true;
+		}
+		
+		public function setListOfIngredients():void {
+			setAnim(new FX_LISTOFINGREDIENTS());
+			clearOnStartEdit = true;
+			maxTxtField = 24;
+			_flashTextField.text = "< Copy paste ingredients here >";
 		}
 		
 		public function setQty() : void {

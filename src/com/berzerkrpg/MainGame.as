@@ -111,6 +111,7 @@ package com.berzerkrpg {
 		}
 		
 		public function startFromNormal() : void {
+			MetaGameProgress.instance.loadFromLocal();
 			new UI_MainMenu();	
 		}
 
@@ -119,14 +120,16 @@ package com.berzerkrpg {
 		}
 		
 		public function startQuickDebug():void {
-			VersionInfo.DEBUG_NOSave = true;
+			
 			MobileSplashScreen.hide();
 			
 			MetaGameProgress.instance.loadFromLocal();
 			MetaGameProgress.instance.clear();
 			DebugGameProgress.setGame1(MetaGameProgress.instance);
 			
+			new UI_RecipeBrowse();
 			onResize(null);
+			
 		}
 		
 		override public function update():void {

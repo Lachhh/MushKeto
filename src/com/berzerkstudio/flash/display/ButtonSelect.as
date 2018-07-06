@@ -21,13 +21,13 @@ package com.berzerkstudio.flash.display {
 			_toggleButtonMode = false;
 		}
 
-		public function Select() : void {
+		public function select() : void {
 			_isSelected = true;
 			canGoto = false;
 			gotoAndPlayStr("selected");
 		}
 		
-		public function Deselect():void {
+		public function deselect():void {
 			_isSelected = false;
 			canGoto = true;
 			gotoUp();
@@ -43,9 +43,9 @@ package com.berzerkstudio.flash.display {
 		
 		public function Toggle():void {
 			if(_isSelected) {
-				Deselect();
+				deselect();
 			} else {
-				Select();	
+				select();	
 			}
 		}
 		
@@ -59,6 +59,14 @@ package com.berzerkstudio.flash.display {
 				addEventListener(MouseEvent.MOUSE_DOWN, onToggleDown);
 			} else {
 				removeEventListener(MouseEvent.MOUSE_DOWN, onToggleDown);
+			}
+		}
+		
+		public function selectIfBoolean(b:Boolean):void {
+			if(b) {
+				select();
+			} else {
+				deselect();
 			}
 		}
 	}

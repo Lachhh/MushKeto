@@ -10,6 +10,12 @@ package com.berzerkrpg {
 		public function UI_Settings() {
 			super(ModelFlashAnimationEnum.UI_SETTINGS_ANIM);
 			registerClick(btnX, onX);
+			registerClick(editIngredientList, onEdit);
+		}
+
+		private function onEdit() : void {
+			destroy();
+			new UI_IngredientAddInBatch();
 		}
 
 		private function onX() : void {
@@ -18,5 +24,6 @@ package com.berzerkrpg {
 		}
 		
 		public function get btnX() : MovieClip {	return visual.getChildByName("btnX")  as MovieClip;	}
+		public function get editIngredientList() : MovieClip {	return visual.getChildByName("editIngredientList")  as MovieClip;	}
 	}
 }

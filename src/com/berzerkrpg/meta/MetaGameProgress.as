@@ -46,6 +46,8 @@ package com.berzerkrpg.meta {
 			objData["numSaves"] = numSaves;
 			objData["onlineAccountName"] = onlineAccountName;
 			objData["creationDate"] = creationDate.toString();
+			objData["metaRecipeGroup"] = metaRecipeGroup.encode();
+			objData["metaSettings"] = metaSettings.encode();
 			
 			
 			return objData; 
@@ -56,13 +58,12 @@ package com.berzerkrpg.meta {
 			numSaves = obj["numSaves"];
 			onlineAccountName = obj["onlineAccountName"];
 			
+			metaRecipeGroup.decode(obj["metaRecipeGroup"]);
+			metaSettings.decode(obj["metaSettings"]);
+			
 			creationDate = new Date(obj["creationDate"]);
-			
-			
 		}
 				
-		
-		
 		public function isEmpty():Boolean {
 			return (numPlay <= 0) ;
 		}
@@ -70,7 +71,6 @@ package com.berzerkrpg.meta {
 		
 		public function saveToLocal():void {
 			if(VersionInfo.DEBUG_NOSave) return ;
-			
 			
 			DataManager.lastLocalSaveFailed = false;
 			DataManager.saveLocally(encode());

@@ -1,13 +1,15 @@
 package com.berzerkrpg.ui {
+	import starling.utils.VAlign;
+
 	import com.berzerkrpg.UI_RecipeEdit;
-	import com.lachhh.flash.FlashUtils;
-	import com.lachhh.io.Callback;
 	import com.berzerkrpg.components.StarlingTextInputComponent;
 	import com.berzerkrpg.meta.MetaIngredient;
-	import com.berzerkrpg.meta.ModelIngredientTraitEnum;
 	import com.berzerkrpg.meta.ModelIngredientTrait;
+	import com.berzerkrpg.meta.ModelIngredientTraitEnum;
 	import com.berzerkstudio.flash.display.DisplayObject;
 	import com.berzerkstudio.flash.display.TextField;
+	import com.lachhh.flash.FlashUtils;
+	import com.lachhh.io.Callback;
 	import com.lachhh.lachhhengine.actor.Actor;
 	import com.lachhh.lachhhengine.ui.views.ViewBase;
 	/**
@@ -57,7 +59,9 @@ package com.berzerkrpg.ui {
 			super.refresh();
 			if(metaIngredient == null) return;
 			inputQty.setText(metaIngredient.qtyStr());
-			nameTxt.text = metaIngredient.modelIngredient.name;
+			nameTxt.text = metaIngredient.name;
+			nameTxt.vAlign = VAlign.CENTER;
+			nameTxt.autoFitText = false;
 			
 			for (var i : int = 0; i < ModelIngredientTraitEnum.ALL.length; i++) {
 				var m:ModelIngredientTrait = ModelIngredientTraitEnum.ALL[i];

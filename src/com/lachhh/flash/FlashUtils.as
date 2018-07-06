@@ -51,8 +51,8 @@ package com.lachhh.flash {
 			return (com.adobe.serialization.json.JSON.encode(obj)); 
 		}
 		
-		static public function myJSONParse(str:String):Object{
-			return (com.adobe.serialization.json.JSON.decode(str)); 
+		static public function myJSONParse(str : String) : Object {
+			return (com.adobe.serialization.json.JSON.decode(str));
 		}
 		
 		static public function myReposTxt(txt:TextField, txtYStart:int):void {	
@@ -71,6 +71,7 @@ package com.lachhh.flash {
 		
 		static public function decodeList(objData:Dictionary, createFct:Function):Vector.<IEncode> {
 			var output:Vector.<IEncode> = new Vector.<IEncode>();
+			if(objData == null) return output;
 			 var i:int = 0;
 			 while(objData["item"+i]) {
 				var model:IEncode = createFct(objData["item"+i]);
@@ -79,6 +80,15 @@ package com.lachhh.flash {
 			 }
 			 
 			 return output;
+		}
+
+		public static function myParseBool(obj : *) : Boolean {
+			if(obj == true) {
+				return true;
+			}
+			if(obj == "true") return true;
+			if(obj == "1") return true;
+			return false;
 		}
 		
 	}

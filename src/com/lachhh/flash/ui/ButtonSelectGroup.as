@@ -1,43 +1,44 @@
 package com.lachhh.flash.ui {
+	import com.berzerkstudio.flash.display.ButtonSelect;
 	
 	
 	/**
 	 * @author Simon Lachance
 	 */
 	public class ButtonSelectGroup {
-		private var _btns:Vector.<ButtonSelect> ;
-		private var _selectedButton : ButtonSelect ;
+		private var _btns:Vector.<com.berzerkstudio.flash.display.ButtonSelect> ;
+		private var _selectedButton : com.berzerkstudio.flash.display.ButtonSelect ;
 		
 		public function ButtonSelectGroup() {
-			_btns = new Vector.<ButtonSelect>();	
+			_btns = new Vector.<com.berzerkstudio.flash.display.ButtonSelect>();	
 		}
 				
 		public function clear():void {
 			removeAllButton();
 		}
 		
-		public function addButton(b : ButtonSelect) : void {
+		public function addButton(b : com.berzerkstudio.flash.display.ButtonSelect) : void {
 			var i:int = _btns.indexOf(b) ;
 			if(i == -1) _btns.push(b);
 		} 
 		
-		public function removeButton(b : ButtonSelect) : void {
+		public function removeButton(b : com.berzerkstudio.flash.display.ButtonSelect) : void {
 			var i:int = _btns.indexOf(b) ;
 			if(i != -1) _btns.splice(i,1);
 		}
 		
 		public function removeAllButton() : void {
-			_btns = new Vector.<ButtonSelect>;
+			_btns = new Vector.<com.berzerkstudio.flash.display.ButtonSelect>;
 		} 
 		 
-		public function getButton(i : int) : ButtonSelect {
+		public function getButton(i : int) : com.berzerkstudio.flash.display.ButtonSelect {
 			if(i < 0 || i >= _btns.length) {
 				throw new Error("index error : " + i);	
 			}
 			return _btns[i];
 		}
 
-		public function getButtonIndex(b : ButtonSelect) : int {
+		public function getButtonIndex(b : com.berzerkstudio.flash.display.ButtonSelect) : int {
 			for(var i:int = 0 ; i < _btns.length ; i++) {
 				if(_btns[i] == b) return i;	
 			}	
@@ -46,7 +47,7 @@ package com.lachhh.flash.ui {
 				
 		public function destroy():void {
 			while(_btns.length > 0) {
-				var b : ButtonSelect = _btns.shift();
+				var b : com.berzerkstudio.flash.display.ButtonSelect = _btns.shift();
 				//b.destroy();	
 			}
 			_btns = null;	
@@ -59,7 +60,7 @@ package com.lachhh.flash.ui {
 			_selectedButton = null;
 		}
 		
-		public function contains(b : ButtonSelect):Boolean {
+		public function contains(b : com.berzerkstudio.flash.display.ButtonSelect):Boolean {
 			
 			return (_btns.indexOf(b) != -1);
 		}
@@ -68,7 +69,7 @@ package com.lachhh.flash.ui {
 			selectButton(getButton(i));
 		}
 		
-		public function selectButton(b:ButtonSelect):void {
+		public function selectButton(b:com.berzerkstudio.flash.display.ButtonSelect):void {
 			if(!contains(b)) {
 				return ;
 			}
@@ -98,7 +99,7 @@ package com.lachhh.flash.ui {
 			return _btns.length;
 		}
 		
-		public function get selectedButton():ButtonSelect {
+		public function get selectedButton():com.berzerkstudio.flash.display.ButtonSelect {
 			return _selectedButton;
 		}
 	}

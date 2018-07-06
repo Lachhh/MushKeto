@@ -29,6 +29,8 @@ package com.lachhh.lachhhengine.animation {
 		static public var UI_POPUP:ModelFlashAnimation = create("UI_POPUP", ModelFlaEnum.JSB_UI_PERSISTENT);
 		static public var UI_LOADING:ModelFlashAnimation = create("UI_LOADING", ModelFlaEnum.JSB_UI_TITLEANDPRELOADER);
 		
+		static public var UI_INGREDIENTSTEMPLATES_ANIM:ModelFlashAnimation = create("UI_INGREDIENTSTEMPLATES", ModelFlaEnum.JSB_UI_PERSISTENT);
+		
 				
 		static public function create(id : String, modelFla : ModelFla) : ModelFlashAnimation {
 			var m:ModelFlashAnimation = new ModelFlashAnimation(ALL.length, id, modelFla);

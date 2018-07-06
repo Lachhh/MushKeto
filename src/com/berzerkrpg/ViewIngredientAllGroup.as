@@ -1,7 +1,8 @@
 package com.berzerkrpg {
 	import com.berzerkrpg.meta.MetaIngredient;
+	import com.berzerkrpg.meta.ModelIngredientCategory;
+	import com.berzerkrpg.meta.ModelIngredientCategoryEnum;
 	import com.berzerkrpg.ui.ViewIngredientAllDynamic;
-	import com.berzerkrpg.ui.ViewIngredientDynamic;
 	import com.berzerkrpg.ui.ViewScrollBar;
 	import com.berzerkstudio.flash.display.MovieClip;
 	import com.lachhh.io.Callback;
@@ -19,7 +20,8 @@ package com.berzerkrpg {
 		private static const DIST_BETWEEN_VIEW : int = 50;
 		public var viewScrollBar : ViewScrollBar;
 		public var listIngredients : Vector.<MetaIngredient> = new Vector.<MetaIngredient>();
-		
+		private var maxViews : Number = 10;
+
 		public function ViewIngredientAllGroup(pScreen : UIBase, pVisual : MovieClip) {
 			super(pScreen, pVisual);
 			viewScrollBar = new ViewScrollBar(pScreen, scrollbarMc, contentMc);
@@ -45,31 +47,38 @@ package com.berzerkrpg {
 		
 		public function refreshPos():void {
 			viewScrollBar.contentWidth = getContentWidth();
+			if(viewScrollBar.isViewLargerThanScroll()){
+				viewScrollBar.setPrct(0);
+			}
 			contentMc.y = -(getContentWidth()-viewScrollBar.viewWidth)*viewScrollBar.getPrctPostion();
 			viewScrollBar.refresh();
-			hideViewIfOutsideOfSight();
+		
+			refreshIndexes();
+		}
+
+		public function refreshIndexes() : void {
 			
+			var indexStart:int = (contentMc.y*-1)/DIST_BETWEEN_VIEW;
+			for (var i : int = 0; i < views.length; i++) {
+				var index:int = indexStart+i;
+				var v:ViewIngredientAllDynamic = views[i] as ViewIngredientAllDynamic;
+				v.visualMc.y = (indexStart+i)*DIST_BETWEEN_VIEW;
+				var newIngredient:MetaIngredient = getIngredientAt(index);
+				if(v.metaIngredient == newIngredient) continue; 
+				v.metaIngredient = newIngredient;
+				v.refresh();
+			}
 		}
 		
-		private function hideViewIfOutsideOfSight():void {
-			for (var i : int = 0; i < views.length; i++) {
-				var v:ViewBase = views[i];
-				var isInSightxMin:Number = (-contentMc.y-DIST_BETWEEN_VIEW);
-				var isInSightxMax:Number = isInSightxMin + 720;
-				
-				var isInSight:Boolean = Utils.isBetweenOrEqual(v.visual.y, isInSightxMin, isInSightxMax);
-				
-				v.visual.visible = isInSight;
-			}
-			//trace(visualMc.y);
+		private function getIngredientAt(i:int):MetaIngredient {
+			if(i<0) return null;
+			if(i >= listIngredients.length) return null;
+			return listIngredients[i];
 		}
+
 		
 		private function getContentWidth():int {
-			var result:int = 0;
-			for (var i : int = 0; i < views.length; i++) {
-				result += DIST_BETWEEN_VIEW;
-			}
-			return result;
+			return listIngredients.length*DIST_BETWEEN_VIEW;
 		}
 				
 		override public function refresh() : void {
@@ -87,8 +96,9 @@ package com.berzerkrpg {
 			if(listIngredients == null) return ;
 			
 			var y:int = 0;
-			for (var i : int = 0; i < listIngredients.length; i++) {
-				var metaIngredient : MetaIngredient = listIngredients[i];
+			for (var i : int = 0; i < maxViews; i++) {
+				var metaIngredient : MetaIngredient = getIngredientAt(i);
+				
 				var newView : ViewIngredientAllDynamic = new ViewIngredientAllDynamic(screen, contentMc);
 				
 				newView.visual.y = y;

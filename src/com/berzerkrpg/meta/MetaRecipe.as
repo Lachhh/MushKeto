@@ -6,18 +6,15 @@ package com.berzerkrpg.meta {
 	 * @author Lachhh
 	 */
 	public class MetaRecipe implements IEncode {
-		public var listIngredients : Vector.<MetaIngredient> = new Vector.<MetaIngredient>();
+		public var metaIngredientsGroup : MetaIngredientGroup = new MetaIngredientGroup();
 		public var name : String;
 		
 		private var objData : Dictionary = new Dictionary();
 		
-		public function addIngredients(m:MetaIngredient):void {
-			listIngredients.push(m);
-		}
 		
 		public function encode():Dictionary {
 			objData["name"] = name;
-			objData["listIngredients"] = FlashUtils.encodeList(Vector.<IEncode>(listIngredients));
+			objData["metaIngredientsGroup"] = metaIngredientsGroup.encode();
 			return objData; 
 		}
 				
@@ -25,26 +22,25 @@ package com.berzerkrpg.meta {
 			if(obj == null) return ;
 			name = obj["name"];
 
-			var list : Vector.<IEncode> = FlashUtils.decodeList(objData, MetaIngredient.createFromDictionnary);
-			listIngredients = Vector.<MetaIngredient>(list);
+			metaIngredientsGroup.decode(obj["metaIngredientsGroup"]);
 		}
 
 		public function getTotalOfTrait(m : ModelIngredientTrait) : Number {
 			var result:Number = 0;
-			for (var i : int = 0; i < listIngredients.length; i++) {
-				result += listIngredients[i].getTotalOfTrait(m);
+			for (var i : int = 0; i < metaIngredientsGroup.listIngredients.length; i++) {
+				result += metaIngredientsGroup.listIngredients[i].getTotalOfTrait(m);
 			}
 			return result;
 		}
 		
 		public function getTotalOfTraitStr(m : ModelIngredientTrait) : String {
-			return getTotalOfTrait(m)+"";
+			return getTotalOfTrait(m).toFixed(2);
 		}
 
 		public static function DEBUG_createDummy() : MetaRecipe {
 			var result : MetaRecipe = new MetaRecipe();
 			for (var i : int = 0; i < 15; i++) {
-				result.addIngredients(MetaIngredient.DEBUG_createDummy());
+				result.metaIngredientsGroup.add(MetaIngredient.DEBUG_createDummy());
 			}
 			
 			result.name = "Dummy " + Math.ceil(Math.random() * 999);

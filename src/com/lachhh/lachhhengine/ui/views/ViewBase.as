@@ -13,7 +13,7 @@ package com.lachhh.lachhhengine.ui.views {
 	public class ViewBase extends ActorComponent {
 		public var screen:UIBase;
 		public var visualRaw:DisplayObject;
-		public var visual:DisplayObject;
+		public var visual:MovieClip;
 		public var visualMc:MovieClip;
 		public var visualTxt:TextField;
 		public var visualBtn:ButtonSelect;
@@ -23,7 +23,7 @@ package com.lachhh.lachhhengine.ui.views {
 			if(pVisual == null) throw new Error("Visual must not be null");
 			screen = pScreen as UIBase;
 			visualRaw = pVisual;
-			visual = visualRaw ;
+			visual = visualRaw as MovieClip ;
 			visualMc = visualRaw as MovieClip ;
 			visualTxt = visualRaw as TextField;
 			visualBtn = visualRaw as ButtonSelect ;

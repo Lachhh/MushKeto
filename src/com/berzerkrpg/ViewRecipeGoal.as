@@ -24,7 +24,7 @@ package com.berzerkrpg {
 				var m:ModelIngredientTrait = ModelIngredientTraitEnum.ALL[i];
 				var txt:TextField = getTraitTxt(m);
 				if(txt == null) continue;
-				txt.text = metaGoal.getValueOfTrait(m)+"";
+				txt.text = metaGoal.metaGoalTrait.getTrait(m).getValueStr();
 			}
 			labelTxt.text = TextFactory.GOAL.getText();
 		}

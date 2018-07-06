@@ -116,8 +116,8 @@ package com.flashinit {
 			//GameConstants.getInstance().loadEmbededData();
 			//DataManagerAIR.loadDefaultBalancing();
 			
-			//m.startQuickDebug();
-			m.startFromNormal();
+			m.startQuickDebug();
+			//m.startFromNormal();
 			
 			MobileSplashScreen.hide();
 		}
